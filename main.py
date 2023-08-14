@@ -2,7 +2,7 @@ import json
 import os
 from shutil import move 
 import csv
-#import pyodbc 
+import pyodbc 
 
 id_array=[]
 topdata=[]
@@ -95,7 +95,7 @@ with open(os.path.join(datadirectory,"game"), 'w') as f:
 
 print(id_array)
 
-
+# MySQL connection goes here
 #for id in id_array:
 #    ExportFile=os.path.abspath(os.path.join(exportdirectory,str(id)))
 #    ImportFile=os.path.abspath(os.path.join(importdirectory,str(id))) 
