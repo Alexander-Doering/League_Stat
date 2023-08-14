@@ -14,6 +14,6 @@ Direct Database connectivity
 
 Export both Teams - select on team in SQL later.
 
-Reevaluate which Data to support
+Reevaluate which Data to use
 
 Evaluate possibility of timeline Data
