@@ -11,6 +11,7 @@ middata=[]
 adcdata=[]
 supdata=[]
 gamedata=[]
+#TOOD: Rethink the name scheme
 importdirectory = os.path.join(os.getcwd(),"Import")
 exportdirectory = os.path.join(os.getcwd(),"Done")
 datadirectory = os.path.join(os.getcwd(),"Export")
