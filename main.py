@@ -1,3 +1,11 @@
+## TO-DO BLOCK ##
+#TODO: Use API Calls
+#TODO: Make Matchfinder by User-iD (User -> PUUID -> Matches)
+#TODO: Option to select Tournament or other Queue Type
+#TODO: Update current version to use scrim results (timeline isn't availible here)
+#TODO: Add Option to add team-lists to match Flex-Queue 
+
+## CODE ## 
 import json
 import os
 from shutil import move 
