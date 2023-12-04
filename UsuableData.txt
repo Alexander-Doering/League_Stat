@@ -1,0 +1,36 @@
+List of what Data we take out of the match json #TODO: timeline json
+From metadata:
+    matchId as database key
+    From participants get UUID for Timeline viewer (doesn't work for Scrims)
+From INFO --> 
+    gameDuration (in Seconds)
+    gameVersion (patch, only before and after first ".")
+    From Participants:
+        champExperience -> experience
+        champLevel -> level
+        championName -> champion
+        championsTransforms (only for kayn lol) -> 0 Kayn | 1 Rhaast | 2 Blue        
+        consumablesPurchased -> controlWardsBought
+        goldEarned -> gold
+        kills
+        deaths
+        assists
+        individualPosition && lane && teamposition-> on match use one, on missmatch: #TODO Test that outerHeight
+        item0 to item6 -> IDs over Riot DataDog
+        totalDamageDealtToChampions
+        trueDamageDealtToChampions
+        magicDamageDealtToChampions
+        physicalDamageDealtToChampions
+        visionScore 
+        visionWardsBoughtInGame
+        totalMinionsKilled
+        neutralMinionsKilled
+        totalAllyJungleMinionsKilled
+        totalEnemyJungleMinionsKilled (only important for Jungle to get Invade-Ratio)
+        damageDealtToObjectives
+
+    From Teams:
+        bans (only champID --> convertFunction)
+        objectives (all)
+        teamID (100 --> blue | 200 --> red)
+        win

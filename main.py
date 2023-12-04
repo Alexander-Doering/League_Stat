@@ -10,7 +10,6 @@ import json
 import os
 from shutil import move 
 import csv
-import pyodbc 
 
 id_array=[]
 topdata=[]
