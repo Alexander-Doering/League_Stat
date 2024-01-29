@@ -10,6 +10,7 @@ import json
 import os
 from shutil import move 
 import csv
+import math
 
 id_array=[]
 topdata=[]
@@ -18,6 +19,7 @@ middata=[]
 adcdata=[]
 supdata=[]
 gamedata=[]
+filterName = "AG Emperor"
 #TOOD: Rethink the name scheme
 importdirectory = os.path.join(os.getcwd(),"Import")
 exportdirectory = os.path.join(os.getcwd(),"Done")
@@ -28,50 +30,81 @@ for filename in os.listdir(importdirectory):
         text = f.read()
         data=json.loads(text)
         # Find out game Data
-        team=data['participants'][0]['TEAM']
         gameid=data['matchId']
         id_array.append(gameid)
+        patch=data['gameVersion']
         time=float(data['gameDuration']/(1000*60))
         win=data['participants'][0]['win']
-        totalkills=int(data['participants'][0]['championsKilled'])+int(data['participants'][1]['championsKilled'])+int(data['participants'][2]['championsKilled'])+int(data['participants'][3]['championsKilled'])+int(data['participants'][4]['championsKilled'])
-        totalassists=int(data['participants'][0]['assists'])+int(data['participants'][1]['assists'])+int(data['participants'][2]['assists'])+int(data['participants'][3]['assists'])+int(data['participants'][4]['assists'])
-        totaldeaths=int(data['participants'][0]['numDeaths'])+int(data['participants'][1]['numDeaths'])+int(data['participants'][2]['numDeaths'])+int(data['participants'][3]['numDeaths'])+int(data['participants'][4]['numDeaths'])
-        if totalkills+totalassists == 0 or totaldeaths == 0:
-                team_kda=0
-        else:
-            team_kda=(totalassists+totalkills)/totaldeaths
-        if (totalkills == 0) or (totalassists == 0):
-            assists_over_kills=0
-        else:
-                assists_over_kills=totalassists/totalkills
-        total_dmg=int(data['participants'][0]['totalDamageDealtToChampions'])+int(data['participants'][1]['totalDamageDealtToChampions'])+int(data['participants'][2]['totalDamageDealtToChampions'])+int(data['participants'][3]['totalDamageDealtToChampions'])+int(data['participants'][4]['totalDamageDealtToChampions'])
         # Gamedata Writer
-        row=[gameid,time,win,totalkills,totalassists,totaldeaths,assists_over_kills,team_kda,total_dmg]
+        row=[gameid,patch,time]
         gamedata.append(row)
-        for x in range (0,5):                     
-            name=data['participants'][x]['name']
-            champ=data['participants'][x]['skin']
-            kills=data['participants'][x]['championsKilled']
+        
+        for x in range(0,10):
+            if(data['participants'][x]['name'] == filterName):
+                if x < 5:
+                    lower = 0
+                    upper = 5
+                else:
+                    lower = 5
+                    upper = 10
+        
+        for x in range (lower,upper):          #TODO: Variable Range           
             assists=data['participants'][x]['assists']
-            deaths=data['participants'][x]['numDeaths']
-            vsmin=float(data['participants'][x]['visionScore']/time)
+            baronKills=data['participants'][x]['baronKills']
+            kills=data['participants'][x]['championsKilled']            
+            dragonKills=data['participants'][x]['dragonKills'] 
+            xpm=round(float(int(data['participants'][x]['exp'])/time))
+            gpm=round(float(int(data['participants'][x]['goldEarned'])/time))
+            item1=data['participants'][x]['item0']
+            item2=data['participants'][x]['item1']
+            item3=data['participants'][x]['item2']
+            item4=data['participants'][x]['item3']
+            item5=data['participants'][x]['item4']
+            item6=data['participants'][x]['item5']
+            item7=data['participants'][x]['item6']
+            level=data['participants'][x]['level']
+            baronKills=data['participants'][x]['baronKills']
             farm=int(data['participants'][x]['minionsKilled'])+int(data['participants'][x]['neutralMinionsKilled'])
-            gpm=float(data['participants'][x]['goldEarned']/time)
-            if totalkills == 0:
-                killpart=0
+            name=data['participants'][x]['name']
+            deaths=data['participants'][x]['numDeaths']
+            selfCamps=math.floor(float((int(data['participants'][x]['neutralMinionsKilledYourJungle']))/4))
+            enemyCamps=math.floor(float((int(data['participants'][x]['neutralMinionsKilledEnemyJungle']))/4))
+            objectiveSteals=data['participants'][x]['objectivesStolen']
+            perk1=data['participants'][x]['perk0']
+            perk2=data['participants'][x]['perk1']
+            perk3=data['participants'][x]['perk2']
+            perk4=data['participants'][x]['perk3']
+            perk5=data['participants'][x]['perk4']
+            perk6=data['participants'][x]['perk5']
+            champ=data['participants'][x]['skin']
+            statPerk1=data['participants'][x]['statPerk0']
+            statPerk2=data['participants'][x]['statPerk1']
+            statPerk3=data['participants'][x]['statPerk2']
+            if(data['participants'][x]['team']=="100"):
+                team="blue"
             else:
-                killpart=float(int(data['participants'][x]['championsKilled'])/totalkills)
-            dmgdealtpercent=float(int(data['participants'][x]['totalDamageDealtToChampions'])/total_dmg)
-            currow=[gameid,name,champ,kills,assists,deaths,vsmin,farm,gpm,killpart,dmgdealtpercent]
-            if x == 0:
+                team="red"
+            teamPosition=data['participants'][x]['teamPosition']
+            damageChamps=data['participants'][x]['totalDamageDealtToChampions']
+            damageObjective=data['participants'][x]['totalDamageDealtToObjectives']
+            shieldingAlly=data['participants'][x]['totalDamageShieldedOnTeammates']
+            healingAlly=data['participants'][x]['totalHealOnTeammates']
+            turretsKilled=data['participants'][x]['turretsKilled']
+            visionWardsBoughtInGame=data['participants'][x]['visionWardsBoughtInGame']
+            wardKilled=data['participants'][x]['wardKilled']
+            wardPlaced=data['participants'][x]['wardPlaced']
+            vsmin=round(float(int(data['participants'][x]['visionScore'])/time))
+            win=data['participants'][x]['win']
+            currow=[gameid,name,champ,teamPosition,win,kills,assists,deaths,gpm,xpm,farm,selfCamps,enemyCamps,objectiveSteals,vsmin,wardKilled,wardPlaced,damageChamps,damageObjective,turretsKilled,dragonKills,baronKills,shieldingAlly,healingAlly,perk1,perk2,perk3,perk4,perk5,perk6,statPerk1,statPerk2,statPerk3,item1,item2,item3,item4,item5,item6,item7]
+            if teamPosition == "TOP":
                 topdata.append(currow)
-            if x == 1:
+            if teamPosition == "JUNGLE":
                 jngdata.append(currow)
-            if x == 2:
+            if teamPosition == "MIDDLE":
                 middata.append(currow)
-            if x == 3:
+            if teamPosition == "BOTTOM":
                 adcdata.append(currow)
-            if x == 4:
+            if teamPosition == "UTILITY":
                 supdata.append(currow)
                    
             
