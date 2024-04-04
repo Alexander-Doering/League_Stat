@@ -1,9 +1,11 @@
 ## TO-DO BLOCK ##
-#TODO: Use API Calls
+#TODO: Use API Calls 
 #TODO: Make Matchfinder by User-iD (User -> PUUID -> Matches)
 #TODO: Option to select Tournament or other Queue Type
 #TODO: Update current version to use scrim results (timeline isn't availible here)
 #TODO: Add Option to add team-lists to match Flex-Queue 
+#TODO: Database connectivity
+#TODO: Reporting
 
 ## CODE ## 
 import json
@@ -37,8 +39,7 @@ for filename in os.listdir(importdirectory):
         win=data['participants'][0]['win']
         # Gamedata Writer
         row=[gameid,patch,time]
-        gamedata.append(row)
-        
+        gamedata.append(row)  
         for x in range(0,10):
             if(data['participants'][x]['name'] == filterName):
                 if x < 5:
@@ -47,7 +48,6 @@ for filename in os.listdir(importdirectory):
                 else:
                     lower = 5
                     upper = 10
-        
         for x in range (lower,upper):          #TODO: Variable Range           
             assists=data['participants'][x]['assists']
             baronKills=data['participants'][x]['baronKills']
@@ -93,7 +93,7 @@ for filename in os.listdir(importdirectory):
             visionWardsBoughtInGame=data['participants'][x]['visionWardsBoughtInGame']
             wardKilled=data['participants'][x]['wardKilled']
             wardPlaced=data['participants'][x]['wardPlaced']
-            vsmin=round(float(int(data['participants'][x]['visionScore'])/time))
+            vsmin=round(float(int(data['participants'][x]['visionScore'])/time),2)
             win=data['participants'][x]['win']
             currow=[gameid,name,champ,teamPosition,win,kills,assists,deaths,gpm,xpm,farm,selfCamps,enemyCamps,objectiveSteals,vsmin,wardKilled,wardPlaced,damageChamps,damageObjective,turretsKilled,dragonKills,baronKills,shieldingAlly,healingAlly,perk1,perk2,perk3,perk4,perk5,perk6,statPerk1,statPerk2,statPerk3,item1,item2,item3,item4,item5,item6,item7]
             if teamPosition == "TOP":
@@ -132,13 +132,4 @@ with open(os.path.join(datadirectory,"sup"), 'w') as f:
 with open(os.path.join(datadirectory,"game"), 'w') as f:
     writer = csv.writer(f) 
     for row in gamedata:
-        writer.writerow(row)            
-
-print(id_array)
-
-# MySQL connection goes here
-#for id in id_array:
-#    ExportFile=os.path.abspath(os.path.join(exportdirectory,str(id)))
-#    ImportFile=os.path.abspath(os.path.join(importdirectory,str(id))) 
-#   move(ImportFile,ExportFile)
-    
+        writer.writerow(row)
