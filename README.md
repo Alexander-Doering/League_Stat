@@ -19,3 +19,4 @@ Build report from DB / Spreadsheet
 - Implement Database Connectivity
    - Implement Modular DB swapping for teams
 - Generate automated & on-demand Reports
+   - Ability to trigger Reports & send Data via Mail for Teamleads
