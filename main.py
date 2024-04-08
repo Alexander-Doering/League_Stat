@@ -4,13 +4,14 @@
 #TODO: Option to select Tournament or other Queue Type
 #TODO: Update current version to use scrim results (timeline isn't availible here)
 #TODO: Add Option to add team-lists to match Flex-Queue 
-#TODO: Database connectivity
 #TODO: Reporting
 import json
 import os
 from shutil import move 
 import csv
 import math
+import mysql.connector
+import numpy as np
 # V A R I A B L E S
 id_array=[]
 topdata=[]
@@ -22,7 +23,14 @@ gamedata=[]
 importdirectory = os.path.join(os.getcwd(),"Import")
 exportdirectory = os.path.join(os.getcwd(),"Done")
 datadirectory = os.path.join(os.getcwd(),"Export")
-filterName = "AG Emperor" #TODO: Swap to PUUID
+#TODO: Make .conf file for this stuff.
+filter = "" 
+db = mysql.connector.connect(
+    host="",
+    user="",
+    database="",
+    password=""
+)
 ## F U N C T I O N S
 def DataReader():
     for filename in os.listdir(importdirectory):
@@ -41,7 +49,7 @@ def DataReader():
             gamedata.append(row)  
             # Find out which Team own team.
             for x in range(0,10):
-                if(data['participants'][x]['name'] == filterName):
+                if(data['participants'][x]['puuid'] == filter):
                     if x < 5:
                         lower = 0
                         upper = 5
@@ -63,10 +71,9 @@ def DataReader():
                 item5=data['participants'][x]['item4']
                 item6=data['participants'][x]['item5']
                 item7=data['participants'][x]['item6']
-                level=data['participants'][x]['level']
                 baronKills=data['participants'][x]['baronKills']
                 farm=int(data['participants'][x]['minionsKilled'])+int(data['participants'][x]['neutralMinionsKilled'])
-                name=data['participants'][x]['name']
+                puuid=data['participants'][x]['puuid']
                 deaths=data['participants'][x]['numDeaths']
                 selfCamps=math.floor(float((int(data['participants'][x]['neutralMinionsKilledYourJungle']))/4))
                 enemyCamps=math.floor(float((int(data['participants'][x]['neutralMinionsKilledEnemyJungle']))/4))
@@ -95,8 +102,11 @@ def DataReader():
                 wardKilled=data['participants'][x]['wardKilled']
                 wardPlaced=data['participants'][x]['wardPlaced']
                 vsmin=round(float(int(data['participants'][x]['visionScore'])/time),2)
-                win=data['participants'][x]['win']
-                currow=[gameid,name,champ,teamPosition,win,kills,assists,deaths,gpm,xpm,farm,selfCamps,enemyCamps,objectiveSteals,vsmin,wardKilled,wardPlaced,damageChamps,damageObjective,turretsKilled,dragonKills,baronKills,shieldingAlly,healingAlly,perk1,perk2,perk3,perk4,perk5,perk6,statPerk1,statPerk2,statPerk3,item1,item2,item3,item4,item5,item6,item7]
+                if(data['participants'][x]['win']=="Win"):
+                    win=1
+                else:
+                    win=0
+                currow=[gameid,puuid,champ,teamPosition,win,kills,assists,deaths,gpm,xpm,farm,selfCamps,enemyCamps,objectiveSteals,vsmin,wardKilled,wardPlaced,damageChamps,damageObjective,turretsKilled,dragonKills,baronKills,shieldingAlly,healingAlly,perk1,perk2,perk3,perk4,perk5,perk6,statPerk1,statPerk2,statPerk3,item1,item2,item3,item4,item5,item6,item7]
                 if teamPosition == "TOP":
                     topdata.append(currow)
                 if teamPosition == "JUNGLE":
@@ -114,9 +124,25 @@ def CsvDataWriter(name, data):
         for row in data:
             writer.writerow(row)
 #DB Writer
-
+def DBDataWriter(table,data):
+    cursor=db.cursor()
+    for i in range(len(data)):
+        if (table=="game"):
+                sql= "INSERT INTO game (GameID, Patch, Duration) VALUES (%s, %s, %s)"
+                val=(data[i][0],data[i][1],data[i][2])
+        else:
+                sql= "Insert INTO "+ table + " (GameID,playerid,champ,position,victory,kills,assists,deaths,gpm,xpm,farm,selfCamps,enemyCamps,objectiveSteals,vsmin,wardsKilled,wardsPlaced,damageChamps,damageObjectives,turretsKilled,dragonKills,baronKills,shieldingAlly,healingAlly,perk1,perk2,perk3,perk4,perk5,perk6,statPerk1,statPerk2,statPerk3,item1,item2,item3,item4,item5,item6,item7) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                val=(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],data[i][6],data[i][7],data[i][8],data[i][9],data[i][10],data[i][11],data[i][12],data[i][13],data[i][14],data[i][15],data[i][16],data[i][17],data[i][18],data[i][19],data[i][20],data[i][21],data[i][22],data[i][23],data[i][24],data[i][25],data[i][26],data[i][27],data[i][28],data[i][29],data[i][30],data[i][31],data[i][32],data[i][33],data[i][34],data[i][35],data[i][36],data[i][37],data[i][38],data[i][39])
+        cursor.execute(sql,val)        
+        db.commit()
 ## S C R I P T
 DataReader()
+DBDataWriter("top",topdata)
+DBDataWriter("jng",jngdata)
+DBDataWriter("mid",middata)
+DBDataWriter("adc",adcdata)
+DBDataWriter("sup",supdata)
+DBDataWriter("game",gamedata)
 CsvDataWriter("top", topdata)
 CsvDataWriter("jng", jngdata)
 CsvDataWriter("mid", middata)
