@@ -9,11 +9,14 @@ Put the json files in "import" directory
 
 Run the main.py
 
+Put output into DB / Spreadsheet
+
+Build report from DB / Spreadsheet
+
 # Planned Features / Changes:
-Direct Database connectivity
-
-Export both Teams - select on team in SQL later.
-
-Reevaluate which Data to use
-
-Evaluate possibility of timeline Data
+- Implement Queue Types (FlexQ and or SoloQ possibility)
+- Timeline Data (Tournament, Flex/Solo)
+- Implement Database Connectivity
+   - Implement Modular DB swapping for teams
+- Generate automated & on-demand Reports
+   - Ability to trigger Reports & send Data via Mail for Teamleads
