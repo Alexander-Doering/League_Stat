@@ -7,7 +7,7 @@
 #TODO: Reporting
 import json
 import os
-from shutil
+import shutil
 import csv
 import math
 import mysql.connector
