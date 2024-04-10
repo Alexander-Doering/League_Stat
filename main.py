@@ -7,11 +7,10 @@
 #TODO: Reporting
 import json
 import os
-from shutil import move 
+from shutil import move
 import csv
 import math
 import mysql.connector
-import numpy as np
 # V A R I A B L E S
 id_array=[]
 topdata=[]
@@ -24,6 +23,7 @@ importdirectory = os.path.join(os.getcwd(),"Import")
 exportdirectory = os.path.join(os.getcwd(),"Done")
 datadirectory = os.path.join(os.getcwd(),"Export")
 #TODO: Make .conf file for this stuff.
+teamname = ""
 filter = "" 
 db = mysql.connector.connect(
     host="",
@@ -130,6 +130,9 @@ def DBDataWriter(table,data):
         if (table=="game"):
                 sql= "INSERT INTO game (GameID, Patch, Duration) VALUES (%s, %s, %s)"
                 val=(data[i][0],data[i][1],data[i][2])
+        elif (table=="team"):
+                sql= "INSERT INTO team (GameID, Name) VALUES (%s, %s)"
+                val=(data[i], teamname)
         else:
                 sql= "Insert INTO "+ table + " (GameID,playerid,champ,position,victory,kills,assists,deaths,gpm,xpm,farm,selfCamps,enemyCamps,objectiveSteals,vsmin,wardsKilled,wardsPlaced,damageChamps,damageObjectives,turretsKilled,dragonKills,baronKills,shieldingAlly,healingAlly,perk1,perk2,perk3,perk4,perk5,perk6,statPerk1,statPerk2,statPerk3,item1,item2,item3,item4,item5,item6,item7) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 val=(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],data[i][6],data[i][7],data[i][8],data[i][9],data[i][10],data[i][11],data[i][12],data[i][13],data[i][14],data[i][15],data[i][16],data[i][17],data[i][18],data[i][19],data[i][20],data[i][21],data[i][22],data[i][23],data[i][24],data[i][25],data[i][26],data[i][27],data[i][28],data[i][29],data[i][30],data[i][31],data[i][32],data[i][33],data[i][34],data[i][35],data[i][36],data[i][37],data[i][38],data[i][39])
@@ -143,6 +146,7 @@ DBDataWriter("mid",middata)
 DBDataWriter("adc",adcdata)
 DBDataWriter("sup",supdata)
 DBDataWriter("game",gamedata)
+DBDataWriter("team", id_array)
 CsvDataWriter("top", topdata)
 CsvDataWriter("jng", jngdata)
 CsvDataWriter("mid", middata)
