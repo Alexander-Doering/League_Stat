@@ -5,7 +5,6 @@ import matplotlib as mpl
 import mysql.connector as dbc
 import re
 # CONFIG
-kills=[]
 teamname = ""
 db = dbc.connect(
     host="",
@@ -13,14 +12,24 @@ db = dbc.connect(
     database="",
     password=""
 )
-def getKills(attributes,role):
+
+def getValues(attributes,table):
+    value=[]
     cursor=db.cursor()
-    sql=("SELECT "+ attributes + " FROM akumu."+ role + " INNER JOIN teams ON " + role +  ".GameID=teams.GameID WHERE teams.teamname=" + '"{}"'.format(teamname))
+    sql=("SELECT "+ attributes + " FROM akumu."+ table + " INNER JOIN teams ON " + table +  ".GameID=teams.GameID WHERE teams.teamname=" + '"{}"'.format(teamname))
     cursor.execute(sql)        
     for (e) in cursor:
-        kills.append(e[0])
-    return(kills)
-
-        
-var=getKills("kills","adc")
-print(var)
+        value.append(e[0])
+    vctr = np.array(value)
+    return(vctr)
+    
+var1=getValues("kills","adc")
+var2=getValues("assists","adc")
+var3=getValues("deaths","adc")
+kda=np.add(var1,var2)/var3
+categories=["1","2","3","4","5","6","7"]
+plt.bar(categories ,kda, color='skyblue')
+plt.xlabel('Game Nr.')
+plt.ylabel('KDA')
+plt.title('ADC KDA per Game')
+plt.show()
