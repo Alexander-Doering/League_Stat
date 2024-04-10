@@ -7,11 +7,10 @@
 #TODO: Reporting
 import json
 import os
-from shutil import move 
+import shutil
 import csv
 import math
 import mysql.connector
-import numpy as np
 # V A R I A B L E S
 id_array=[]
 topdata=[]
@@ -135,6 +134,10 @@ def DBDataWriter(table,data):
                 val=(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],data[i][6],data[i][7],data[i][8],data[i][9],data[i][10],data[i][11],data[i][12],data[i][13],data[i][14],data[i][15],data[i][16],data[i][17],data[i][18],data[i][19],data[i][20],data[i][21],data[i][22],data[i][23],data[i][24],data[i][25],data[i][26],data[i][27],data[i][28],data[i][29],data[i][30],data[i][31],data[i][32],data[i][33],data[i][34],data[i][35],data[i][36],data[i][37],data[i][38],data[i][39])
         cursor.execute(sql,val)        
         db.commit()
+def moveFiles():
+    file_names=os.listdir(importdirectory)
+    for file_name in file_names:
+        shutil.move(os.path.join(importdirectory, file_name), exportdirectory)
 ## S C R I P T
 DataReader()
 DBDataWriter("top",topdata)
@@ -149,3 +152,4 @@ CsvDataWriter("mid", middata)
 CsvDataWriter("bot", adcdata)
 CsvDataWriter("sup", supdata)
 CsvDataWriter("game", gamedata)
+moveFiles()
