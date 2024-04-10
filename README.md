@@ -9,9 +9,7 @@ Put the json files in "import" directory
 
 Run the main.py
 
-Put output into DB / Spreadsheet
-
-Build report from DB / Spreadsheet
+Outputs into .csv & into MySQL DB
 
 # Planned Features / Changes:
 - Implement Queue Types (FlexQ and or SoloQ possibility)
