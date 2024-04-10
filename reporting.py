@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib as mpl
 import mysql.connector as dbc
-import re
 # CONFIG
 teamname = ""
 db = dbc.connect(
