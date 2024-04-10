@@ -10,7 +10,7 @@ import os
 from shutil import move
 import csv
 import math
-import mysql.connector
+import mysql.connector as dbc
 # V A R I A B L E S
 id_array=[]
 topdata=[]
@@ -25,7 +25,7 @@ datadirectory = os.path.join(os.getcwd(),"Export")
 #TODO: Make .conf file for this stuff.
 teamname = ""
 filter = "" 
-db = mysql.connector.connect(
+db = dbc.connect(
     host="",
     user="",
     database="",
