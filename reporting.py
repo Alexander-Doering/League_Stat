@@ -15,7 +15,8 @@ db = dbc.connect(
 )
 def getKills(attributes,role):
     cursor=db.cursor()
-    sql=("SELECT "+ attributes + " FROM akumu."+ role)
+    sql=("SELECT "+ attributes + " FROM akumu."+ role + " INNER JOIN teams ON " + role +  ".GameID=teams.GameID WHERE teams.teamname=" + '"{}"'.format(teamname))
+    print (sql) 
     cursor.execute(sql)        
     for (e) in cursor:
         kills.append(e[0])
