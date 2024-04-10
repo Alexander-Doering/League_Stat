@@ -11,7 +11,6 @@ from shutil import move
 import csv
 import math
 import mysql.connector
-import numpy as np
 # V A R I A B L E S
 id_array=[]
 topdata=[]
